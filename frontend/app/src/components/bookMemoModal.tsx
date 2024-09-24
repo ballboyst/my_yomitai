@@ -126,7 +126,7 @@ export default function BookMemoModal({ onClose }: bookRegisterFormProps) {
                   </Select>
                 </Field>
                 <Field className="mx-4 mb-2 flex flex-col">
-                  <Label className="">読み終わったページNo.</Label>
+                  <Label className="">読み終わったページNo.（現在のページ）</Label>
                   <Input
                     className="rounded-lg border p-1"
                     name="page_read"

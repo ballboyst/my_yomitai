@@ -2,7 +2,7 @@
 
 services:
   yomitai_local_db:
-    container_name: yomitai_local_db
+    container_name: my_yomitai_local_db
     image: mysql:8.0
     restart: unless-stopped
     volumes:
@@ -22,7 +22,7 @@ services:
       MYSQL_COLLATION_SERVER: 'utf8mb4_unicode_ci'
 
   yomitai_backend:
-    container_name: yomitai_backend
+    container_name: my_yomitai_backend
     build:
       context: .
       dockerfile: ./backend/Dockerfile
@@ -41,7 +41,7 @@ services:
 
 
   yomitai_frontend:
-    container_name: yomitai_frontend
+    container_name: my_yomitai_frontend
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
