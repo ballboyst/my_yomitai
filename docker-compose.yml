@@ -46,10 +46,16 @@ services:
       context: .
       dockerfile: ./frontend/Dockerfile
     volumes:
-      - ./frontend:/frontend
+      - ./frontend:/code
     ports:
       - "5173:5173"  # フロントエンドのポート設定
     tty: true
+    command: >
+      /bin/bash -c '
+      cd app/ &&
+      npm ci --cache /tmp/empty-cache &&
+      npm run dev
+      '
 
 volumes:
   mysql-data:

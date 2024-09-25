@@ -41,7 +41,7 @@ function Header() {
             ホーム
           </Link>
 
-          <Link
+          {/* <Link
             to="graph"
             className="mx-4 flex flex-col items-center hover:text-green-500"
           >
@@ -66,7 +66,7 @@ function Header() {
               />
             </svg>
             グラフ
-          </Link>
+          </Link> */}
 
           <Link
             to="mission"
