@@ -81,7 +81,12 @@ const BookCard: React.FC<BookCardProps> = ({ book, onClick }) => (
 );
 
 // 書籍詳細のコンポーネント
-const BookDetails: React.FC<BookDetailsProps> = ({ details }) => (
+const BookDetails: React.FC<BookDetailsProps> = ({ details }) => {
+  if (!details || details.book_detail.length === 0) {
+    return <div>No book details available.</div>; // 詳細がない場合の表示
+  }
+
+  return (
   <div
     className="relative mx-4 my-4 h-full w-full transform
                    rounded-xl bg-green-100 p-4 text-gray-600 shadow-md"
@@ -114,6 +119,7 @@ const BookDetails: React.FC<BookDetailsProps> = ({ details }) => (
     </div>
   </div>
 );
+};
 
 export default function Library() {
   const [fetchData, setFetchData] = useState<BookData[]>([]); // 初期値を空の配列に設定
