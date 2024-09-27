@@ -140,6 +140,7 @@ export default function BookMemoModal({ onClose }: bookRegisterFormProps) {
                   <Input
                     className="rounded-lg border p-1"
                     name="reading_date"
+                    type="date"
                     value={bookMemoForm.reading_date}
                     onChange={handleChange}
                   />
