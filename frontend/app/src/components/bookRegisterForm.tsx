@@ -136,7 +136,7 @@ export default function BookRegisterForm({ onClose }: bookRegisterFormProps) {
                     onChange={handleChange}
                   />
                 </Field>
-                <Field className="m-2 grid grid-cols-2">
+                {/* <Field className="m-2 grid grid-cols-2">
                   <Label className="mr-2 flex items-center justify-center">
                     ジャンル
                   </Label>
@@ -150,7 +150,7 @@ export default function BookRegisterForm({ onClose }: bookRegisterFormProps) {
                     <option value="仮ジャンル1">仮ジャンル1</option>
                     <option value="仮ジャンル2">仮ジャンル2</option>
                   </Select>
-                </Field>
+                </Field> */}
                 <Field className="m-2 grid grid-cols-2">
                   <Label className="mr-2 flex items-center justify-center">
                     タグ
@@ -188,7 +188,7 @@ export default function BookRegisterForm({ onClose }: bookRegisterFormProps) {
                 </Field>
                 <Field className="m-2 grid grid-cols-2">
                   <Label className="mr-2 flex items-center justify-center">
-                    画像
+                    画像URL
                   </Label>
                   <Input
                     className="rounded-lg border p-2 text-center"
