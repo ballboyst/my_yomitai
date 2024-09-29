@@ -24,7 +24,7 @@ export default function Graph() {
           </div>
           <div className="flex">
             <div
-              className="relative mx-4 my-4 flex h-full w-1/2 rounded-xl
+              className="relative mx-4 my-4 flex h-full w-full rounded-xl
                    bg-green-100 p-4 text-center shadow-md"
             >
               <BarChart
@@ -38,22 +38,26 @@ export default function Graph() {
                       "5/15",
                       "5/16",
                       "5/17",
-                      "5/18",
+                      "5/19",
+                      "5/20",
+                      "5/21",
+                      "5/22",
+                      "5/23",
                     ],
                     scaleType: "band",
                   },
                 ]}
                 series={[
                   {
-                    data: [20, 50, 30, 40, 10, 30, 60],
+                    data: [20, 50, 30, 40, 10, 30, 60,0,100],
                   },
                 ]}
-                width={400}
-                height={300}
+                width={800}
+                height={400}
               />
             </div>
 
-            <div
+            {/* <div
               className="relative mx-4 my-4 flex h-full w-1/2 rounded-xl
                    bg-green-100 p-4 text-center shadow-md"
             >
@@ -78,7 +82,7 @@ export default function Graph() {
                 width={450}
                 height={300}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
