@@ -204,29 +204,33 @@ export default function Library() {
                 onChange={handleChange}
               >
                 <option value="">タグを選択</option>
-                {fetchData &&
-                  fetchData.map(
-                    (data) =>
-                      data.tags.length != 0 && (
-                        <option key={data.book_id} value={data.tags}>
-                          {data.tags}
-                        </option>
-                      ),
-                  )}
+                  {fetchData &&
+                    fetchData.map((data) =>
+                      data.tags.length !== 0 ? (
+                        data.tags.map((tag) => (
+                          <option key={`${data.book_id}-${tag}`} value={tag}>
+                            {tag}
+                          </option>
+                        ))
+                      ) : null
+                    )}
               </Select>
             </form>
 
             {/* 書籍一覧表示部 */}
             <div className="flex flex-col items-center p-4">
               {fetchData ? (
-                fetchData &&
-                fetchData.map((book) => (
-                  <BookCard
-                    key={book.book_id}
-                    book={book}
-                    onClick={handleBookClick}
-                  />
-                ))
+                fetchData
+                  .filter((book) => 
+                    selectTag === "" || book.tags.includes(selectTag)
+                  )
+                  .map((book) => (
+                    <BookCard
+                      key={book.book_id}
+                      book={book}
+                      onClick={handleBookClick}
+                    />
+                  ))
               ) : (
                 <p>No Books Available</p>
               )}
