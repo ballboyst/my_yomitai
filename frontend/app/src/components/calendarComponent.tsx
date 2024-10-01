@@ -102,7 +102,7 @@ export const CalendarComponent = () => {
     <div className="flex items-center justify-center p-0 sm:p-5">
       <ScheduleCalendar
         schedules={readingDates}
-        className="h-[95vh] w-[90%] sm:h-[380px] sm:w-[380px]"
+        className="h-[95vh] w-[90%] sm:h-[540px] sm:w-[680px]"
         startOnMonday
       />
     </div>
