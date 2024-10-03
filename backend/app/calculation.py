@@ -23,6 +23,7 @@ def calculate_pages_read_daily(db: Session, user_id: int, start_date: datetime.d
 
 def calculate_pages_read_monthly(db: Session, user_id: int, start_date: datetime.date, end_date: datetime.date):
     """指定された期間の月ごとのページ数を計算"""
+    # ループ処理でstart_dateからend_dateまで数値を１増やしながら日付と各読書ページを格納するように変更
     monthly_data = db.query(
         func.date_format(Daily_log.date, '%Y-%m').label('month'),
         func.sum(Daily_log.page_read).label('pages')
