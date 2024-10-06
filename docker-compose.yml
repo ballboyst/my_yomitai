@@ -27,13 +27,12 @@ services:
       context: .
       dockerfile: ./backend/Dockerfile
     volumes:
-      - ./backend:/backend
+      - ./backend:/workspace
     ports:
       - "8000:8000"  # バックエンドのポート設定
     tty: true
     command: >
       /bin/sh -c '
-      cd backend/ &&
       uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
       '
     depends_on:

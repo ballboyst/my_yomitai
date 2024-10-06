@@ -20,32 +20,48 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
     if session_id not in sessions:
         raise HTTPException(status_code=401, detail="未承認またはセッションが無効")
 
-    user_id= sessions[session_id]
+    user_id = sessions[session_id]
 
-    end_date = datetime.today().date()  # 今日の日付
+    today = datetime.today().date()
+    print(f"今日は{today}")
 
-    # 週、月、年は引数にweekly、monthly、yearlyを入れたら切り替わるように設定
-    if period == 'weekly':
-        start_date = end_date - timedelta(days=7)
-        pages_summary = calculate_pages_read_daily(db, user_id, start_date, end_date)
-        genre_summary = calculate_genre_distribution_daily(db, user_id, start_date, end_date)
-        total_pages = calculate_total_pages_read_period(db, user_id, start_date, end_date)
-    elif period == 'monthly':
-        start_date = end_date - timedelta(days=30)
-        pages_summary = calculate_pages_read_daily(db, user_id, start_date, end_date)
-        genre_summary = calculate_genre_distribution_daily(db, user_id, start_date, end_date)
-        total_pages = calculate_total_pages_read_period(db, user_id, start_date, end_date)
-    elif period == 'yearly':
-        start_date = end_date - timedelta(days=365)
-        pages_summary = calculate_pages_read_monthly(db, user_id, start_date, end_date)
-        genre_summary = calculate_genre_distribution_monthly(db, user_id, start_date, end_date)
-        total_pages = calculate_total_pages_read_period(db, user_id, start_date, end_date)
+    if period == "weekly":
+        start_date = today - timedelta(days=7)
+        print(f"期準備は{today}")
+    elif period == "monthly":
+        start_date = today -timedelta(days = 30)
+        print(f"期準備は{today}")
+    elif period == "yearly":
+        print(f"期準備は{today}")
     else:
-        raise ValueError("Invalid period specified")
+        raise HTTPException(status_code=401,detail="リクエストが無効")
 
-    return {
-        "pages_summary": pages_summary,
-        "genre_summary": genre_summary,
-        "total_pages_read": total_pages,
-        }
+    
+
+    # end_date = datetime.today().date()  # 今日の日付
+
+    # # 週、月、年は引数にweekly、monthly、yearlyを入れたら切り替わるように設定
+    # if period == 'weekly':
+    #     start_date = end_date - timedelta(days=7)
+    #     pages_summary = calculate_pages_read_daily(db, user_id, start_date, end_date)
+    #     genre_summary = calculate_genre_distribution_daily(db, user_id, start_date, end_date)
+    #     total_pages = calculate_total_pages_read_period(db, user_id, start_date, end_date)
+    # elif period == 'monthly':
+    #     start_date = end_date - timedelta(days=30)
+    #     pages_summary = calculate_pages_read_daily(db, user_id, start_date, end_date)
+    #     genre_summary = calculate_genre_distribution_daily(db, user_id, start_date, end_date)
+    #     total_pages = calculate_total_pages_read_period(db, user_id, start_date, end_date)
+    # elif period == 'yearly':
+    #     start_date = end_date - timedelta(days=365)
+    #     pages_summary = calculate_pages_read_monthly(db, user_id, start_date, end_date)
+    #     genre_summary = calculate_genre_distribution_monthly(db, user_id, start_date, end_date)
+    #     total_pages = calculate_total_pages_read_period(db, user_id, start_date, end_date)
+    # else:
+    #     raise ValueError("Invalid period specified")
+
+    # return {
+    #     "pages_summary": pages_summary,
+    #     "genre_summary": genre_summary,
+    #     "total_pages_read": total_pages,
+    #     }
 
