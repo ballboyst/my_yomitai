@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from datetime import datetime, timedelta
 from ..database import get_db
 from app.calculation import (
@@ -10,6 +11,7 @@ from app.calculation import (
     calculate_total_pages_read_period
 )
 from ..session_store import sessions
+from ..models import Daily_log, My_book, User
 
 router = APIRouter()
 
@@ -21,22 +23,41 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
         raise HTTPException(status_code=401, detail="未承認またはセッションが無効")
 
     user_id = sessions[session_id]
-
+    start_date = 0
     today = datetime.today().date()
     print(f"今日は{today}")
 
     if period == "weekly":
-        start_date = today - timedelta(days=7)
+        start_date = today - timedelta(days = 7)
         print(f"期準備は{today}")
     elif period == "monthly":
-        start_date = today -timedelta(days = 30)
+        start_date = today - timedelta(days = 30)
         print(f"期準備は{today}")
     elif period == "yearly":
+        start_date = today - timedelta(days = 365)
         print(f"期準備は{today}")
     else:
         raise HTTPException(status_code=401,detail="リクエストが無効")
 
-    
+
+    # モデル操作
+    result = db.query(
+        Daily_log.date, func.sum(Daily_log.page_read).label('total_pages')).join(
+            My_book,
+            Daily_log.my_book_id == My_book.id).filter(
+            My_book.user_id == user_id,
+            Daily_log.date >= start_date,
+            Daily_log.date <= today
+            ).group_by(Daily_log.date)
+
+
+
+    return[{'date':date, 'pages':total_pages} for date, total_pages in result]
+    print(f"取得データは{result}")
+
+
+
+
 
     # end_date = datetime.today().date()  # 今日の日付
 
