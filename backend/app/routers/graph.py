@@ -51,10 +51,20 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
             ).group_by(Daily_log.date)
 
 
-
-    return[{'date':date, 'pages':total_pages} for date, total_pages in result]
     print(f"取得データは{result}")
+    log_data=[{'date':date, 'pages':pages} for date, pages in result]
+    
+    search = start_date
+    while search <= today:
+        if search not in [entry['date'] for entry in log_data]:
+            push_date={'date':search, 'pages':0}
+            log_data.append(push_date)
+        else:
+            pass
+        search += timedelta(days = 1)
 
+    graph_element = sorted(log_data, key=lambda x: x['date'])
+    return(graph_element)
 
 
 
