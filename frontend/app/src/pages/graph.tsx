@@ -2,6 +2,29 @@ import RadioButton from "../components/togleButton";
 import { BarChart, PieChart } from "@mui/x-charts";
 
 export default function Graph() {
+
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/graph", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((graph_element) => {
+        console.log("Data received:", graph_element); // デバッグ用ログ
+        setData(graph_element);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (graph_element) {
+      console.log("get data:", graph_element);
+    }
+  }, [graph_element]);
+
   return (
     <>
       {/* <Header /> */}

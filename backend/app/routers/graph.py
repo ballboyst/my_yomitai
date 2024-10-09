@@ -29,13 +29,13 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
 
     if period == "weekly":
         start_date = today - timedelta(days = 7)
-        print(f"期準備は{today}")
+        print(f"基準日は{start_date}")
     elif period == "monthly":
         start_date = today - timedelta(days = 30)
-        print(f"期準備は{today}")
+        print(f"基準日は{start_date}")
     elif period == "yearly":
         start_date = today - timedelta(days = 365)
-        print(f"期準備は{today}")
+        print(f"基準日は{start_date}")
     else:
         raise HTTPException(status_code=401,detail="リクエストが無効")
 
