@@ -23,7 +23,7 @@ app = FastAPI()
 
 # CORS設定
 origins = ["http://localhost:5173",
-         "http://100.64.1.43:5173",]
+         "http://0.0.0.0:5173",]
 
 app.add_middleware(
     CORSMiddleware,
