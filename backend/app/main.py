@@ -22,9 +22,12 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 # CORS設定
+origins = ["http://localhost:5173",
+         "http://100.64.1.43:5173",]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], # Reactアプリケーションのオリジンを許可
+    allow_origins = origins,  # Reactアプリケーションのオリジンを許可
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
