@@ -27,7 +27,8 @@ export default function Login() {
   } = useForm<LoginForm>({ resolver: zodResolver(LoginScheme) });
 
   const onSubmit: SubmitHandler<LoginForm> = (data) => {
-    fetch("http://localhost:8000/api/login", {
+    // console.log(process.env.REACT_APP_WEB_IP); // ここで環境変数を確認
+    fetch('http://localhost:8000/api/login', {
       method: "POST",
       credentials: "include", // クッキーを受け取るために必要
       headers: {

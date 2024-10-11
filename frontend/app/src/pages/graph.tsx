@@ -1,18 +1,20 @@
 import RadioButton from "../components/togleButton";
 import { BarChart, PieChart } from "@mui/x-charts";
+import { useEffect, useState } from "react";
+
 
 export default function Graph() {
-
+const [data, setData] = useState();
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/graph", {
+    fetch("http://localhost:8000/api/graph?period=weekly", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
-      .then((graph_element) => {
-        console.log("Data received:", graph_element); // デバッグ用ログ
-        setData(graph_element);
+      .then((data) => {
+        console.log("Data received:", data); // デバッグ用ログ
+        setData(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -20,10 +22,10 @@ export default function Graph() {
   }, []);
 
   useEffect(() => {
-    if (graph_element) {
-      console.log("get data:", graph_element);
+    if (data) {
+      console.log("get data:", data);
     }
-  }, [graph_element]);
+  }, [data]);
 
   return (
     <>
