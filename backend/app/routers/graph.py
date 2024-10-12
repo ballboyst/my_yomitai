@@ -28,6 +28,7 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
     today = japanese_time.date()
     print(f"今日は{today}")
 
+    # このままだと年間表示が３６５日で膨大な量となるため、月毎にまとめる処理が必要
     if period == "weekly":
         start_date = today - timedelta(days = 7)
         print(f"基準日は{start_date}")

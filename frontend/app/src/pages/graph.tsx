@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 
 export default function Graph() {
 const [data, setData] = useState();
-  let period = "weekly";
+
+let period = "monthly";
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/graph?period=${period}`, {
@@ -27,6 +28,20 @@ const [data, setData] = useState();
       console.log("get data:", data);
     }
   }, [data]);
+  
+  // ここから自作関数
+
+  // const [dateList,setDateList] = useState([]);
+  // const [readPage,setReadPage] = useState([]);
+  
+  console.log(data);
+  let date_list = Array.isArray(data) ? data.map((item) => item.date):[];
+  console.log(date_list);
+  let read_page = Array.isArray(data) ? data.map((item) => item.pages):[];
+  console.log(read_page);
+
+  // setDateList(date_list);
+  // setReadPage(read_page);
 
   return (
     <>
@@ -38,7 +53,7 @@ const [data, setData] = useState();
               className="relative mx-4 my-4 h-full w-1/2 rounded-xl
                    bg-green-100 p-4 text-center shadow-md"
             >
-              Total Page Count : 100
+              Total Page Count : 100（仮表示）
               {/* これまでの合計は100ページです。 */}
             </div>
             <div
@@ -57,28 +72,18 @@ const [data, setData] = useState();
                 xAxis={[
                   {
                     id: "barCategories",
-                    data: [
-                      "5/12",
-                      "5/13",
-                      "5/14",
-                      "5/15",
-                      "5/16",
-                      "5/17",
-                      "5/19",
-                      "5/20",
-                      "5/21",
-                      "5/22",
-                      "5/23",
-                    ],
+                    data: date_list,
+                    // data: ["5/10","5/11","5/12","5/13","5/14","5/15","5/16","5/17","5/18"],
                     scaleType: "band",
                   },
                 ]}
                 series={[
                   {
-                    data: [20, 50, 30, 40, 10, 30, 60,0,100],
+                    data: read_page
+                    // data: [20, 50, 30, 40, 10, 30, 60,0,100],
                   },
                 ]}
-                width={800}
+                width={1300}
                 height={400}
               />
             </div>
