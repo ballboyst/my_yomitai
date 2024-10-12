@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 
 export default function Graph() {
 const [data, setData] = useState();
+  let period = "weekly";
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/graph?period=weekly", {
+    fetch(`http://localhost:8000/api/graph?period=${period}`, {
       method: "GET",
       credentials: "include",
     })

@@ -24,7 +24,8 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
 
     user_id = sessions[session_id]
     start_date = 0
-    today = datetime.today().date()
+    japanese_time = datetime.now() + timedelta(hours=9)
+    today = japanese_time.date()
     print(f"今日は{today}")
 
     if period == "weekly":
