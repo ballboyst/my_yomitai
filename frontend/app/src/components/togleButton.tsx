@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-function RadioButton() {
-  const [selectedOption, setSelectedOption] = useState("");
+const RadioButton = ({periodState, setPeriodState}) => {
+  // const [selectedOption, setSelectedOption] = useState("");
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value);
+    setPeriodState(event.target.value);
   };
 
   return (
@@ -13,8 +13,8 @@ function RadioButton() {
         <label>
           <input
             type="radio"
-            value="Week"
-            checked={selectedOption === "Week"}
+            value="weekly"
+            checked={periodState === "weekly"}
             onChange={handleOptionChange}
           />
           Week
@@ -25,8 +25,8 @@ function RadioButton() {
         <label>
           <input
             type="radio"
-            value="Month"
-            checked={selectedOption === "Month"}
+            value="monthly"
+            checked={periodState === "monthly"}
             onChange={handleOptionChange}
           />
           Month
@@ -37,8 +37,8 @@ function RadioButton() {
         <label>
           <input
             type="radio"
-            value="Year"
-            checked={selectedOption === "Year"}
+            value="yearly"
+            checked={periodState === "yearly"}
             onChange={handleOptionChange}
           />
           Year

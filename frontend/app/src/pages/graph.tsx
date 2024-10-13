@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 
 
 export default function Graph() {
-const [data, setData] = useState();
-
-let period = "monthly";
-
+const [data, setData] = useState([]);
+const [periodState, setPeriodState] = useState("monthly");
+console.log(periodState);
   useEffect(() => {
-    fetch(`http://localhost:8000/api/graph?period=${period}`, {
+    fetch(`http://localhost:8000/api/graph?period=${periodState}`, {
       method: "GET",
       credentials: "include",
     })
@@ -21,7 +20,7 @@ let period = "monthly";
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [periodState]);
 
   useEffect(() => {
     if (data) {
@@ -60,7 +59,7 @@ let period = "monthly";
               className="relative mx-4 my-4 h-full w-1/2 rounded-xl
                     p-4 text-center"
             >
-              <RadioButton />
+              <RadioButton periodState={periodState} setPeriodState={setPeriodState}/>
             </div>
           </div>
           <div className="flex">
