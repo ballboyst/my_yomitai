@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, extract
 from datetime import datetime, timedelta
 from ..database import get_db
 from app.calculation import (
@@ -26,10 +26,7 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
     start_date = 0
     japanese_time = datetime.now() + timedelta(hours=9)
     today = japanese_time.date()
-    tomonth = today.strftime('%Y-%m')
     print(f"今日は{today}")
-    #フォーマット変換するとstr型になってしまう
-    print(f"今月は{tomonth}")
 
 
     # 期間の開始基準日を設定
@@ -40,7 +37,7 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
         start_date = today - timedelta(days = 30)
         print(f"基準日は{start_date}")
     elif period == "yearly":
-        start_date = todo - timedelta(days = 365)
+        start_date = today - timedelta(days = 365)
         print(f"基準日は{start_date}")
     else:
         raise HTTPException(status_code=401,detail="リクエストが無効")
@@ -50,13 +47,32 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
     if period == "yearly":
         # このコードでは年月がstr型になってしまうため、date型で集計し、最後に年月へフォーマット変換するよう書き換える。
         result = db.query(
-            func.date_format(Daily_log.date,'%Y-%m'),func.sum(Daily_log.page_read).label('total_pages')).join(
+            extract('year',Daily_log.date).label('year'),
+            extract('month',Daily_log.date).label('month'),
+            func.sum(Daily_log.page_read).label('total_pages')).join(
                 My_book,
                 Daily_log.my_book_id == My_book.id).filter(
                 My_book.user_id == user_id,
                 Daily_log.date >= start_date,
-                Daily_log.date <= today
-                ).group_by(Daily_log.date)
+                Daily_log.date <= today).group_by(
+                extract('year',Daily_log.date),
+                extract('month',Daily_log.date)
+                ).all()
+        log_data = [{'date': f"{year}-{month:02}", 'pages': page_read} for year, month, page_read in result]
+       # リスト内の読書日と対象期間を比較し、読書日がなければ読書日と０ページを追加する
+        # search = start_date
+        # while search <= today:
+        #     if search not in [entry['date'] for entry in log_data]:
+        #         push_date={'date':search, 'pages':0}
+        #         log_data.append(push_date)
+        #     else:
+        #         pass
+        #     search += timedelta(days = 1)
+
+        # 日付と読書ページを連続データとなるよう整列
+        # graph_element = sorted(log_data, key=lambda x: datetime.strptime(x['date','%Y-%m']))
+        return(log_data)
+
     else:
         result = db.query(
             Daily_log.date, func.sum(Daily_log.page_read).label('total_pages')).join(
@@ -66,24 +82,20 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
                 Daily_log.date >= start_date,
                 Daily_log.date <= today
                 ).group_by(Daily_log.date)
+        log_data=[{'date':date, 'pages':pages} for date, pages in result]
+        # リスト内の読書日と対象期間を比較し、読書日がなければ読書日と０ページを追加する
+        search = start_date
+        while search <= today:
+            if search not in [entry['date'] for entry in log_data]:
+                push_date={'date':search, 'pages':0}
+                log_data.append(push_date)
+            else:
+                pass
+            search += timedelta(days = 1)
 
-
-    print(f"取得データは{result}")
-    log_data=[{'date':date, 'pages':pages} for date, pages in result]
-
-    # リスト内の読書日と対象期間を比較し、読書日がなければ読書日と０ページを追加する
-    search = start_date
-    while search <= today:
-        if search not in [entry['date'] for entry in log_data]:
-            push_date={'date':search, 'pages':0}
-            log_data.append(push_date)
-        else:
-            pass
-        search += timedelta(days = 1)
-
-    # 日付と読書ページを連続データとなるよう整列
-    graph_element = sorted(log_data, key=lambda x: x['date'])
-    return(graph_element)
+        # 日付と読書ページを連続データとなるよう整列
+        graph_element = sorted(log_data, key=lambda x: x['date'])
+        return(graph_element)
 
 
 
