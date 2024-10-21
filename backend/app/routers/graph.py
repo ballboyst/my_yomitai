@@ -3,15 +3,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, extract
 from datetime import datetime, timedelta
 from ..database import get_db
-from app.calculation import (
-    calculate_pages_read_daily,
-    calculate_pages_read_monthly,
-    calculate_genre_distribution_daily,
-    calculate_genre_distribution_monthly,
-    calculate_total_pages_read_period
-)
 from ..session_store import sessions
 from ..models import Daily_log, My_book, User
+from decimal import Decimal
 
 router = APIRouter()
 
@@ -45,7 +39,6 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
 
     # モデルを操作し読書日と読書ページのリストを作成する
     if period == "yearly":
-        # このコードでは年月がstr型になってしまうため、date型で集計し、最後に年月へフォーマット変換するよう書き換える。
         result = db.query(
             extract('year',Daily_log.date).label('year'),
             extract('month',Daily_log.date).label('month'),
@@ -58,19 +51,28 @@ def get_reading_statistics(request: Request, period: str, db: Session = Depends(
                 extract('year',Daily_log.date),
                 extract('month',Daily_log.date)
                 ).all()
-        log_data = [{'date': f"{year}-{month:02}", 'pages': page_read} for year, month, page_read in result]
-       # リスト内の読書日と対象期間を比較し、読書日がなければ読書日と０ページを追加する
-        # search = start_date
-        # while search <= today:
-        #     if search not in [entry['date'] for entry in log_data]:
-        #         push_date={'date':search, 'pages':0}
-        #         log_data.append(push_date)
-        #     else:
-        #         pass
-        #     search += timedelta(days = 1)
+        
+        existing_date = {(year, month): total_pages for year, month, total_pages in result}
+        current_date = start_date  # ここでstart_dateをそのまま使用
+        all_month = []
 
-        # 日付と読書ページを連続データとなるよう整列
-        # graph_element = sorted(log_data, key=lambda x: datetime.strptime(x['date','%Y-%m']))
+        while current_date <= today:
+            year = current_date.year
+            month = current_date.month
+            all_month.append((year, month))
+            # 月を進める
+            if month == 12:
+                current_date = (datetime(year + 1, 1, 1)).date()  # date型を維持
+            else:
+                current_date = (datetime(year, month + 1, 1)).date()  # date型を維持
+
+        final_data = []
+        for year, month in all_month:
+            total_pages = existing_date.get((year, month), Decimal('0'))
+            final_data.append((year, month, total_pages))
+        print(final_data)
+
+        log_data = [{'date': f"{year}-{month:02}", 'pages': page_read} for year, month, page_read in final_data]
         return(log_data)
 
     else:
